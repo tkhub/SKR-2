@@ -768,13 +768,21 @@
 // extra connectors. Leave undefined any used for non-endstop and non-probe purposes.
 //#define USE_XMIN_PLUG
 //#define USE_YMIN_PLUG
-#define USE_ZMIN_PLUG
+//#define USE_ZMIN_PLUG
+
+//#define USE_XMIN_PLUG
+//#define USE_YMIN_PLUG
+//#define USE_ZMIN_PLUG
+
 //#define USE_IMIN_PLUG
 //#define USE_JMIN_PLUG
 //#define USE_KMIN_PLUG
+//#define USE_XMAX_PLUG
+//#define USE_YMAX_PLUG
+//#define USE_ZMAX_PLUG
 #define USE_XMAX_PLUG
 #define USE_YMAX_PLUG
-//#define USE_ZMAX_PLUG
+#define USE_ZMAX_PLUG
 //#define USE_IMAX_PLUG
 //#define USE_JMAX_PLUG
 //#define USE_KMAX_PLUG
@@ -819,9 +827,10 @@
 
 // Mechanical endstop with COM to ground and NC to Signal uses "false" here (most common setup).
 //#define X_MIN_ENDSTOP_INVERTING false // Set to true to invert the logic of the endstop.
-#define X_MIN_ENDSTOP_INVERTING true  // Set to true to invert the logic of the endstop.
+#define X_MIN_ENDSTOP_INVERTING false // Set to true to invert the logic of the endstop.
 //#define Y_MIN_ENDSTOP_INVERTING false // Set to true to invert the logic of the endstop.
-#define Y_MIN_ENDSTOP_INVERTING true  // Set to true to invert the logic of the endstop.
+#define Y_MIN_ENDSTOP_INVERTING false // Set to true to invert the logic of the endstop.
+//#define Z_MIN_ENDSTOP_INVERTING false // Set to true to invert the logic of the endstop.
 #define Z_MIN_ENDSTOP_INVERTING false // Set to true to invert the logic of the endstop.
 #define I_MIN_ENDSTOP_INVERTING false // Set to true to invert the logic of the endstop.
 #define J_MIN_ENDSTOP_INVERTING false // Set to true to invert the logic of the endstop.
@@ -835,10 +844,10 @@
 #define Z_MIN_PROBE_ENDSTOP_INVERTING false // Set to true to invert the logic of the probe.
 
 /**
- * Stepper Drivers
+ *  @brief Stepper Drivers
  *
- * These settings allow Marlin to tune stepper driver timing and enable advanced options for
- * stepper drivers that support them. You may also override timing options in Configuration_adv.h.
+ * @details These settings allow Marlin to tune stepper driver timing and enable advanced options for
+ *          stepper drivers that support them. You may also override timing options in Configuration_adv.h.
  *
  * A4988 is assumed for unspecified drivers.
  *
@@ -898,6 +907,11 @@
 // Check for stuck or disconnected endstops during homing moves.
 //#define DETECT_BROKEN_ENDSTOP
 
+/**
+ * @brief Movement Setting
+ * @details These settings can be reset by M502
+ * Note that if EEPROM is enabled, saved values will override these.
+ */
 //=============================================================================
 //============================== Movement Settings ============================
 //=============================================================================
@@ -924,7 +938,8 @@
  *                                      X, Y, Z [, I [, J [, K]]], E0 [, E1[, E2...]]
  */
 // #define DEFAULT_AXIS_STEPS_PER_UNIT   { 80, 80, 400, 96 }
-#define DEFAULT_AXIS_STEPS_PER_UNIT   { 80, 80, 800, 93 }
+// #define DEFAULT_AXIS_STEPS_PER_UNIT   { 80, 80, 800, 93 }
+#define DEFAULT_AXIS_STEPS_PER_UNIT   { 80, 80, 400, 93 } // https://github.com/MarlinFirmware/Marlin/issues/16630
 
 /**
  * Default Max Feed Rate (mm/s)
@@ -932,9 +947,12 @@
  *                                      X, Y, Z [, I [, J [, K]]], E0 [, E1[, E2...]]
  */
 //#define DEFAULT_MAX_FEEDRATE          { 200, 200, 5, 25 }
-#define DEFAULT_MAX_FEEDRATE          { 8000, 8000, 15, 25}
+ #define DEFAULT_MAX_FEEDRATE          { 500, 500, 5, 25} // https://github.com/firestrife23/ender-5-marlin/blob/master/Configuration.h
+//#define DEFAULT_MAX_FEEDRATE          { 300, 300, 5, 25} // https://github.com/wlieb/Marlin-2.0-Ender-5
+//#define DEFAULT_MAX_FEEDRATE          { 100, 100, 1, 25}
+//#define DEFAULT_MAX_FEEDRATE          { 8000, 8000, 15, 50}
 
-//#define LIMITED_MAX_FR_EDITING        // Limit edit via M203 or LCD to DEFAULT_MAX_FEEDRATE * 2
+///#define LIMITED_MAX_FR_EDITING        // Limit edit via M203 or LCD to DEFAULT_MAX_FEEDRATE * 2
 #if ENABLED(LIMITED_MAX_FR_EDITING)
   #define MAX_FEEDRATE_EDIT_VALUES    { 600, 600, 10, 50 } // ...or, set your own edit limits
 #endif
@@ -946,7 +964,7 @@
  *                                      X, Y, Z [, I [, J [, K]]], E0 [, E1[, E2...]]
  */
 //#define DEFAULT_MAX_ACCELERATION      { 1000, 1000, 100, 10000 }
-#define DEFAULT_MAX_ACCELERATION      { 500, 500, 100, 5000 }
+#define DEFAULT_MAX_ACCELERATION      { 500, 500, 100, 5000 } // https://github.com/firestrife23/ender-5-marlin/blob/master/Configuration.h
 
 //#define LIMITED_MAX_ACCEL_EDITING     // Limit edit via M201 or LCD to DEFAULT_MAX_ACCELERATION * 2
 #if ENABLED(LIMITED_MAX_ACCEL_EDITING)
@@ -976,7 +994,7 @@
  * When changing speed and direction, if the difference is less than the
  * value set here, it may happen instantaneously.
  */
-//#define CLASSIC_JERK
+// #define CLASSIC_JERK
 #if ENABLED(CLASSIC_JERK)
   #define DEFAULT_XJERK 10.0
   #define DEFAULT_YJERK 10.0
@@ -1092,7 +1110,8 @@
  */
 // #define BLTOUCH
 // ENABLE BLTOUCH
-#define BLTOUCH
+// Enable Later 1.16
+// #define BLTOUCH
 
 /**
  * Touch-MI Probe by hotends.fr
@@ -1331,9 +1350,10 @@
 // Invert the stepper direction. Change (or reverse the motor connector) if an axis goes the wrong way.
 //#define INVERT_X_DIR false
 #define INVERT_X_DIR true
+// #define INVERT_Y_DIR false
 #define INVERT_Y_DIR true
-//#define INVERT_Z_DIR false
-#define INVERT_Z_DIR true
+//#define INVERT_Z_DIR true
+#define INVERT_Z_DIR false
 //#define INVERT_I_DIR false
 //#define INVERT_J_DIR false
 //#define INVERT_K_DIR false
@@ -1372,10 +1392,14 @@
 // Direction of endstops when homing; 1=MAX, -1=MIN
 // :[-1,1]
 //#define X_HOME_DIR -1
+//#define X_HOME_DIR -1
 #define X_HOME_DIR 1
 //#define Y_HOME_DIR -1
+//#define Y_HOME_DIR -1
 #define Y_HOME_DIR 1
-#define Z_HOME_DIR -1
+// #define Z_HOME_DIR -1
+//#define Z_HOME_DIR -1
+#define Z_HOME_DIR 1
 //#define I_HOME_DIR -1
 //#define J_HOME_DIR -1
 //#define K_HOME_DIR -1
@@ -1389,6 +1413,7 @@
 #define Y_BED_SIZE 220
 
 // Travel limits (mm) after homing, corresponding to endstop positions.
+
 #define X_MIN_POS 0
 #define Y_MIN_POS 0
 #define Z_MIN_POS 0
@@ -1403,6 +1428,7 @@
 //#define K_MIN_POS 0
 //#define K_MAX_POS 50
 
+
 /**
  * Software Endstops
  *
@@ -1413,7 +1439,7 @@
  */
 
 // Min software endstops constrain movement within minimum coordinate bounds
-#define MIN_SOFTWARE_ENDSTOPS
+//#define MIN_SOFTWARE_ENDSTOPS
 #if ENABLED(MIN_SOFTWARE_ENDSTOPS)
   #define MIN_SOFTWARE_ENDSTOP_X
   #define MIN_SOFTWARE_ENDSTOP_Y
@@ -1424,7 +1450,7 @@
 #endif
 
 // Max software endstops constrain movement within maximum coordinate bounds
-#define MAX_SOFTWARE_ENDSTOPS
+//#define MAX_SOFTWARE_ENDSTOPS
 #if ENABLED(MAX_SOFTWARE_ENDSTOPS)
   #define MAX_SOFTWARE_ENDSTOP_X
   #define MAX_SOFTWARE_ENDSTOP_Y
@@ -1554,7 +1580,8 @@
 //#define AUTO_BED_LEVELING_3POINT
 //#define AUTO_BED_LEVELING_LINEAR
 //#define AUTO_BED_LEVELING_BILINEAR
-#define AUTO_BED_LEVELING_BILINEAR
+//  Enable Later 1.16
+// #define AUTO_BED_LEVELING_BILINEAR
 //#define AUTO_BED_LEVELING_UBL
 //#define MESH_BED_LEVELING
 
